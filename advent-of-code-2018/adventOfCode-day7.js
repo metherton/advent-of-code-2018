@@ -16,7 +16,7 @@ var node = function() {
 rl.on('line', (line) => {
   lineNr++;
   lines.push(line);
-  if (lineNr === 7) {
+  if (lineNr === 101) {
     ADVENT_OF_CODE.sumOfParts(lines);
   }
 });
@@ -52,17 +52,45 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
       return _sumOfParts(parts, tree);
     }
   }
-  const tree = _sumOfParts(input, []);
+  let tree = _sumOfParts(input, []);
   let rootKey;
   Object.keys(tree).forEach((f) => {
     if (tree[f].previous.length == 0) {
-      rootKey = f;
+      console.log(f);
     }
   });
 
-
   console.log(tree);
 
+  let letterOrderSeq = [];
 
+  const _order = (letter, accumulator, letterSeq) => {
+
+    console.log('check:', letter);
+
+    if (Object.keys(accumulator).length === 0) {
+      return accumulator;
+    } else {
+      if (accumulator[letter].previous.length === 0) {
+        console.log('push:', letter);
+        letterSeq.push(letter);
+        accumulator[letter].next.sort().forEach((l) => {
+          const index = accumulator[l].previous.indexOf(letter);
+          if (index > -1) {
+            accumulator[l].previous.splice(index, 1);
+          }
+          return _order(l, accumulator, letterSeq);
+        });
+        delete accumulator[letter];
+      }
+    }
+
+  }
+
+  ['A', 'H', 'J', 'X'].forEach((i) => {
+    _order(i, tree, letterOrderSeq)
+  });
+
+  console.log(letterOrderSeq.join(''));
 
 }
