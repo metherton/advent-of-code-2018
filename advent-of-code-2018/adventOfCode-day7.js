@@ -16,7 +16,8 @@ var node = function() {
 rl.on('line', (line) => {
   lineNr++;
   lines.push(line);
-  if (lineNr === 101) {
+  if (lineNr === 5) {
+  //if (lineNr === 101) {
     ADVENT_OF_CODE.sumOfParts(lines);
   }
 });
@@ -87,7 +88,11 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
 
   }
 
-  ['A', 'H', 'J', 'X'].forEach((i) => {
+  // ['A', 'H', 'J', 'X'].forEach((i) => {
+  //   _order(i, tree, letterOrderSeq)
+  // });
+
+  ['A'].forEach((i) => {
     _order(i, tree, letterOrderSeq)
   });
 
