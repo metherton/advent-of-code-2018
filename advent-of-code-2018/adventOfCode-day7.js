@@ -10,14 +10,14 @@ const rl = readline.createInterface({
 let lineNr = 0;
 
 var node = function() {
-  return {next: [], previous:[]};
+  return {next: [], previous:[], willBeDeleted: false};
 };
 
 rl.on('line', (line) => {
   lineNr++;
   lines.push(line);
-  if (lineNr === 5) {
-  //if (lineNr === 101) {
+ // if (lineNr === 5) {
+  if (lineNr === 101) {
     ADVENT_OF_CODE.sumOfParts(lines);
   }
 });
@@ -54,34 +54,46 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
     }
   }
   let tree = _sumOfParts(input, []);
+  let sortedTree = [];
   let rootKey;
-  Object.keys(tree).forEach((f) => {
-    if (tree[f].previous.length == 0) {
-      console.log(f);
-    }
+  Object.keys(tree).sort().forEach((f) => {
+    sortedTree[f] = tree[f];
   });
 
-  console.log(tree);
+  console.log(sortedTree);
 
   let letterOrderSeq = [];
 
   const _order = (letter, accumulator, letterSeq) => {
 
-    console.log('check:', letter);
+ //   console.log('try:', letter);
 
     if (Object.keys(accumulator).length === 0) {
       return accumulator;
     } else {
       if (accumulator[letter].previous.length === 0) {
-        console.log('push:', letter);
         letterSeq.push(letter);
-        accumulator[letter].next.sort().forEach((l) => {
-          const index = accumulator[l].previous.indexOf(letter);
-          if (index > -1) {
-            accumulator[l].previous.splice(index, 1);
+        accumulator[letter].willBeDeleted = true;
+        // find next letter to iterate over..
+        // will be a merge of the next
+        Object.keys(accumulator).sort().forEach((l) => {
+       //   console.log(accumulator[l]);
+          if (accumulator[l] && !accumulator[l].willBeDeleted) {
+            const index = accumulator[l].previous.indexOf(letter);
+            if (index > -1) {
+              accumulator[l].previous.splice(index, 1);
+            }
+            return _order(l, accumulator, letterSeq);
           }
-          return _order(l, accumulator, letterSeq);
         });
+        // accumulator[letter].next.sort().forEach((l) => {
+        //   const index = accumulator[l].previous.indexOf(letter);
+        //   if (index > -1) {
+        //     accumulator[l].previous.splice(index, 1);
+        //   }
+        //   return _order(l, accumulator, letterSeq);
+        // });
+
         delete accumulator[letter];
       }
     }
@@ -92,10 +104,11 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
   //   _order(i, tree, letterOrderSeq)
   // });
 
-  ['A'].forEach((i) => {
-    _order(i, tree, letterOrderSeq)
-  });
+  // ['A'].forEach((i) => {
+  //   _order(i, tree, letterOrderSeq)
+  // });
 
+  _order('A', sortedTree, letterOrderSeq)
   console.log(letterOrderSeq.join(''));
 
 }
