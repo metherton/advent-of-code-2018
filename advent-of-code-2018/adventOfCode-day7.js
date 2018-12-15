@@ -74,6 +74,13 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
       if (accumulator[letter].previous.length === 0) {
         letterSeq.push(letter);
         accumulator[letter].willBeDeleted = true;
+        Object.keys(accumulator).forEach((l) => {
+          const index = accumulator[l].previous.indexOf(letter);
+          if (index > -1) {
+            accumulator[l].previous.splice(index, 1);
+          }
+        });
+
         // find next letter to iterate over..
         // will be a merge of the next
         Object.keys(accumulator).sort().forEach((l) => {
