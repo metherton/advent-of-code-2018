@@ -62,11 +62,15 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
 
   console.log(sortedTree);
 
+  const numberOfWorkers = 2;
+  let currentTime = 0;
+  let workers = [];
+  for (var i =0; i < numberOfWorkers; i++) {
+    workers.push({id: i, busy: false, timeWorkerWillBeFree: undefined, busyWithTaskNumber: undefined})
+  }
+
   let letterOrderSeq = [];
-  
-  let numberOfWorkers = 2;
-  let workersBusy = 0;
-  
+
   const _order = (letter, accumulator, letterSeq) => {
 
     // check if all keys have been deleted
@@ -76,7 +80,13 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
       // if no previous then we want to save / remove it
       if (accumulator[letter].previous.length === 0) {
         letterSeq.push(letter);
-        workersBusy += 1;
+        console.log('+++++++++++++ pushing +++++++++++++', letter);
+        for (var i = 0; i < numberOfWorkers; i++) {
+          if (!workers[i].busy) {
+            workers[i].busy = true;
+            workers[i].timeWorkerWillBeFree = currentTime + (letter.charCodeAt(0) - 64);
+          }
+        }
         // mark the letter as needed to be deleted
         accumulator[letter].willBeDeleted = true;
         // remove the letter to be deleted from previous of all other letters
@@ -95,6 +105,7 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
           }
         });
 
+     //   console.log('++++++ delete ++++++', letter);
         delete accumulator[letter];
       }
     }
