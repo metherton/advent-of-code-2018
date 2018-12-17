@@ -16,8 +16,8 @@ var node = function() {
 rl.on('line', (line) => {
   lineNr++;
   lines.push(line);
- // if (lineNr === 5) {
-  if (lineNr === 101) {
+ if (lineNr === 7) {
+//  if (lineNr === 101) {
     ADVENT_OF_CODE.sumOfParts(lines);
   }
 });
@@ -63,7 +63,10 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
   console.log(sortedTree);
 
   let letterOrderSeq = [];
-
+  
+  let numberOfWorkers = 2;
+  let workersBusy = 0;
+  
   const _order = (letter, accumulator, letterSeq) => {
 
     // check if all keys have been deleted
@@ -73,6 +76,7 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
       // if no previous then we want to save / remove it
       if (accumulator[letter].previous.length === 0) {
         letterSeq.push(letter);
+        workersBusy += 1;
         // mark the letter as needed to be deleted
         accumulator[letter].willBeDeleted = true;
         // remove the letter to be deleted from previous of all other letters
@@ -98,7 +102,7 @@ ADVENT_OF_CODE.sumOfParts = (input) => {
   }
 
 
-  _order('A', sortedTree, letterOrderSeq)
+  _order('C', sortedTree, letterOrderSeq)
   console.log(letterOrderSeq.join(''));
 
 }
