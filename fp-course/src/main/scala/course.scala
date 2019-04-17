@@ -24,6 +24,10 @@ object Bar {
 
 object course extends App {
 
+
+  val bla1 = 45
+  println(bla1.toString.toList(0))
+
   // return given number as list of digits
 // val toDigits: (i: Int) => List[Int]
   // return given number as a reversed list of digits
@@ -50,7 +54,7 @@ object course extends App {
     loop(0, List())
   }
 
-  val myLong: Long = 375213257576161L
+  val myLong: Long = 375213257576161L // answer should be 50 when sumDigits
   println(toDigits(myLong))
 
   val myLongs = List(1L, 2L, 3L, 4L)
@@ -94,18 +98,27 @@ object course extends App {
 //    loop(0, 0)
 //  }
 
-  val sumDigits = (l: List[Long]) => {
-
-    def loop(i: Int, acc: Int): Int = {
-      if (l.length == 0)  0
-      else if (i == l.length) acc
-      else loop(i + 1, acc + l(i).toInt)
-    }
-    loop(0, 0)
+  val sumDigits: List[Long] => Long = l => l match {
+    case Nil => 0
+    case h :: t => toDigits(h).sum + sumDigits(t)
   }
 
+//    def loop(i: Int, acc: Int, index: Int): Int = {
+//      if (l.length == 0)  0
+//      else if (i == l.length) acc
+//      else if (l(i).toString.length == 1)  loop(i + 1, acc + l(i).toInt, 0)
+//      else loop(i, acc + l(i).toString.toList(index).toInt - 48, 1)
+//    }
+//    loop(0, 0, 0)
+//    l match {
+//      case Nil => 0
+//      case h :: t => toDigits(h).sum + sumDigits(t)
+//    }
+//    45
+//  }
 
-  println(sumDigits(doubleSecond(toDigitsRev(myLong))))
+
+ // println(sumDigits(doubleSecond(toDigitsRev(myLong))))
 
   val creditCards =  List(4716347184862961L, 4532899082537349L, 4485429517622493L)
 //  val creditCards =  List(3L, 3L, 3)
@@ -114,15 +127,16 @@ object course extends App {
 //    (sumDigits compose doubleSecond compose toDigitsRev(n)) % 10 == 0
 //  }
 
-  val isValid: Long => Boolean = n => {
+  val isValid: Long => Boolean = n =>
     (sumDigits compose doubleSecond compose toDigitsRev)(n) % 10 == 0
-  }
+
 
   println(isValid(myLong))
 
   val bla = doubleSecond compose toDigitsRev
   println(bla(3))
 
+  println(doubleSecond(toDigitsRev(myLong)))
 
   println(sumDigits(List(12,3,5)))
 }
